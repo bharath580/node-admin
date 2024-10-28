@@ -2,7 +2,27 @@ const express = require("express");
 const db = require("../config/database.config");
 const baleModel = require("../model/bale.model");
 const router = express.Router();
-
+router.get("/baleMaterial", async (req, res) => {
+  try {
+    const query = "SELECT * FROM baling_material"
+    const result = await baleModel.executeQuery(query);
+    res.json(result);
+  } catch (e) {
+    console.error("Error:", e);
+    res.status(500).send("Error");
+  }
+});
+router.get("/baleDropdownList", async (req, res) => {
+  try {
+    const query = `SELECT concat(codes.code,batches_details.batch_id) as batch_id FROM batches_details join codes on codes.code='BAT'
+GROUP BY batches_details.batch_id`
+    const result = await baleModel.executeQuery(query);
+    res.json(result);
+  } catch (e) {
+    console.error("Error:", e);
+    res.status(500).send("Error");
+  }
+});
 router.get("/", async (req, res) => {
   try {
     const query = `SELECT CONCAT(codes.code,bales.bale_id) AS display_bale_id,bales.*,
@@ -33,4 +53,5 @@ router.get("/:id", async (req, res) => {
     res.status(500).send("Error");
   }
 });
+
 module.exports = router;

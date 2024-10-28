@@ -3,7 +3,7 @@ const express = require('express');
 const cors=require('cors')
 // const multer=require('multer')
 const path=require('path')
-
+const bodyParser = require('body-parser');
 // const bodyParser = require('body-parser');
 const db=require('./config/database.config')
 const verifyToken=require('./middleware')
@@ -19,21 +19,18 @@ const app = express();
 
 
 
-app.use(cors())
 app.use(cors({
-  origin: 'http://localhost:3000', 
-  origin: 'https://www.hk.kcdev.xyz',
-  origin:'*'
-
+  origin: ['http://localhost:3000', 'https://www.hk.kcdev.xyz', '*'],
 }));
 
-
+app.use(bodyParser.json({ limit: '100mb' })); // or higher if needed
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true })); 
 const port = 2000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'))
-
+// app.use(express.static('public'))
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 // const storage=multer.diskStorage({
 //   destination:'../images/',
 //   filename:(req,file,cb)=>{

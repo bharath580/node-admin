@@ -14,8 +14,8 @@ const executeQuery = (sql, values) => {
 const getAll = async () => {
   const sql = `SELECT CONCAT(codes.code,purchase_order.po_id) AS display_order_id,
   purchase_order.po_id AS order_id,
-  DATE_FORMAT(purchase_order.date, '%d/%m/%Y') AS date,
-  suppliers.supplier_id AS supplier_id,
+  DATE_FORMAT(purchase_order.date, '%d/%m/%Y') AS date,DATE_FORMAT(purchase_order.date, '%H:%i') AS time,
+  suppliers.supplier_id AS supplier_id,purchase_order.supplier_signature as supplier_signature,
   suppliers.supplier_name AS supplier,
   SUM(
       purchase_order_details.quantity
@@ -57,20 +57,23 @@ purchase_order.po_id desc;`;
 };
 
 const getById = async (id) => {
+  console.log("purchase id excecute")
   try {
     const sql = `SELECT
-      *, DATE_FORMAT(purchase_order.date, '%d/%m/%Y') AS date,
-      SUM(purchase_order_details.quantity) AS totalQuantity
+      *, DATE_FORMAT(purchase_order.date, '%d/%m/%Y') AS date,CONCAT(codes.code,purchase_order.po_id) AS display_order_id,
+      SUM(purchase_order_details.quantity) AS totalQuantity,purchase_order.supplier_signature 
+      AS supplierSignature 
     FROM
       purchase_order
     JOIN purchase_order_details 
     ON purchase_order.po_id = purchase_order_details.po_id
     JOIN suppliers 
     ON purchase_order.supplier_id = suppliers.supplier_id
+    JOIN codes ON codes.name='Purchases'
     WHERE purchase_order.po_id = ${id}`;
 
     const sql2 = `SELECT
-      pod.*,pm.material_name
+      pod.*,pm.material_name,CONCAT(pm.code,po.po_id) AS material_code
     FROM
       purchase_order_details pod
     JOIN purchase_order po ON pod.po_id = po.po_id

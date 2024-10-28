@@ -4,7 +4,7 @@ const secretKey='abcd'
 
 const verifyToken=(req,res,next)=>{
   let token =req.headers['authorization']
-   
+   console.log("error")
     if(!token){
         return res.json({message:'No token provided'})
     }
