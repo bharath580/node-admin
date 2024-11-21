@@ -4,8 +4,11 @@ const baleModel = require("../model/bale.model");
 const router = express.Router();
 router.get("/baleMaterial", async (req, res) => {
   try {
-    const query = "SELECT * FROM baling_material"
-    const result = await baleModel.executeQuery(query);
+    const result={};
+    const query1 = "SELECT * FROM baling_material"
+    const query2 = "SELECT * FROM operators"
+     result.balingMaterial = await baleModel.executeQuery(query1);
+     result.operators = await baleModel.executeQuery(query2);
     res.json(result);
   } catch (e) {
     console.error("Error:", e);
@@ -26,7 +29,12 @@ GROUP BY batches_details.batch_id`
 router.get("/", async (req, res) => {
   try {
     const query = `SELECT CONCAT(codes.code,bales.bale_id) AS display_bale_id,bales.*,
-    DATE_FORMAT(bales.created_on, '%d/%m/%Y') AS date FROM bales
+     CONCAT(
+        MONTHNAME(bales.created_on),
+        ' ',
+        DAY(bales.created_on)
+    ) AS date,DATE_FORMAT(bales.created_on, '%H:%i') AS time
+     FROM bales
     JOIN codes ON codes.name='Bale'`;
     const result = await baleModel.executeQuery(query);
     res.json(result);
