@@ -17,7 +17,7 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const sql = `SELECT
+  const sql = `SELECT s.*,
   s.supplier_id,
   s.supplier_name,
   s.phone,
@@ -47,25 +47,27 @@ const create = async (user) => {
     supplier_name,
     address,
     age,
-    user_name,
-    password,
     phone,
     id_proof_type,
     supplier_signature,
     supplier_image,
+    id_proof_number,
+    bank_account_number,
+    id_proof_image
   } = user;
   const sql =
-    "INSERT INTO suppliers (supplier_name, address, age,user_name,password,phone,id_proof_type,supplier_signature,supplier_image ) VALUES (?, ?, ?,?,?,?,?,?,?)";
+    "INSERT INTO suppliers (supplier_name, address, age,phone,id_proof_type,supplier_signature,supplier_image,id_proof_number,bank_account_number,id_proof_image ) VALUES (?, ?, ?,?,?,?,?,?,?,?)";
   return executeQuery(sql, [
     supplier_name,
     address,
     age,
-    user_name,
-    password,
     phone,
     id_proof_type,
     supplier_signature,
     supplier_image,
+    id_proof_number,
+    bank_account_number,
+    id_proof_image
   ]);
 };
 

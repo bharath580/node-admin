@@ -15,6 +15,7 @@ const baleRouter=require('./router/bale.router')
 const saleRouter=require('./router/sale.router')
 const dashboardRouter=require('./router/dashboard.router')
 const segregationRouter=require('./router/segregation.router')
+const buyerRouter=require('./router/buyer.router')
 const app = express();
 
 
@@ -42,14 +43,15 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 // })
 // app.use(upload.any())
 app.use('/api/user',authRouter)
-app.use('/api/supplier',supplierRouter)
-app.use('/api/purchase',purchaseRouter)
-app.use('/api/batch',batchRouter)
-app.use('/api/bale',baleRouter)
-app.use('/api/segregation',segregationRouter)
-app.use('/api/sale',saleRouter)
+app.use('/api/supplier',verifyToken,supplierRouter)
+app.use('/api/purchase',verifyToken,purchaseRouter)
+app.use('/api/batch',verifyToken,batchRouter)
+app.use('/api/bale',verifyToken,baleRouter)
+app.use('/api/segregation',verifyToken,segregationRouter)
+app.use('/api/sale',verifyToken,saleRouter)
 // app.use('/api/sale',verifyToken,saleRouter)
 app.use('/api/dashboard',verifyToken,dashboardRouter)
+app.use('/api/buyer',verifyToken,buyerRouter)
 
 app.listen(port, (err) => {
   if (err) {

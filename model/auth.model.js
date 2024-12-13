@@ -11,7 +11,7 @@ const executeQuery = (sql, values) => {
     });
   };
   const getById = async (id) => {
-    const sql = `SELECT id,user_name,role,access_token FROM admin_user WHERE id=?`;
+    const sql = `SELECT supervisor_id,user_name,role,access_token FROM supervisors WHERE supervisor_id=?`;
     return executeQuery(sql, [id]);
   };
   

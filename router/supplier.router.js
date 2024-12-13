@@ -32,22 +32,26 @@ router.post(
   "/",
   upload.fields([
     { name: "supplier_image", maxCount: 1 },
-    { name: "supplier_signature", maxCount: 1 },
+    { name: "id_proof_image", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
-      // const body=req.body
-      // console.log("body",body)
+      const body=JSON.parse(req.body.data)
+      const files=req.files
+      console.log("body",body)
+      console.log("file",files)
+      
       let data = {
-        supplier_name: req.body.supplier_name,
-        address: req.body.address,
-        age: req.body.age,
-        user_name: req.body.user_name,
-        password: req.body.password,
-        phone: req.body.phone,
-        id_proof_type: req.body.id_proof_type,
-        supplier_image: req.files["supplier_image"][0].filename,
-        supplier_signature: req.files["supplier_signature"][0].filename,
+        supplier_name: body.data.supplier_name || '',
+        address: body.data.address || '',
+        age: body.data.age || '',
+        phone: body.data.phone || '',
+        id_proof_type: body.data.id_proof_type || '',
+        id_proof_number: body.data.id_proof_number || '',
+        bank_account_number: body.data.bank_account_number || '',
+        supplier_signature: body.supplierSignature || '',
+        supplier_image:req.files["supplier_image"][0] ?`images/${req.files["supplier_image"][0].filename}`:'',
+        id_proof_image: req.files["id_proof_image"][0] ?`images/${req.files["id_proof_image"][0].filename}`: '',
       };
       console.log("data", data);
 

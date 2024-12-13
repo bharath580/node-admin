@@ -9,11 +9,13 @@ router.get("/batchList", async (req, res) => {
     try {
       const query = `SELECT CONCAT(codes.code,batches.batch_id) AS display_id,
       SUM(purchase_order_details.quantity) AS totalQuantity,
-      batches.batch_id AS batch_id
+      batches.batch_id AS batch_id,bales_details.bale_id
       FROM batches 
       JOIN batches_details ON batches.batch_id=batches_details.batch_id 
       JOIN purchase_order_details ON purchase_order_details.po_id=batches_details.purchase_order_id AND purchase_order_details.purchase_material_id= batches_details.material_id
-      JOIN codes ON codes.name='Batches' WHERE batches.status!=3 GROUP BY batches.batch_id`;
+      JOIN codes ON codes.name='Batches'
+      left join bales_details on bales_details.batch_id = batches.batch_id 
+      WHERE batches.status!=3 AND bales_details.batch_id is Null  GROUP BY batches.batch_id`;
       const result = await segregationModel.executeQuery(query);
       res.json(result);
     } catch (e) {
