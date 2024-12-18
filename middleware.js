@@ -3,7 +3,7 @@ const jwt= require('jsonwebtoken')
 const secretKey='abcd'
 
 const verifyToken=(req,res,next)=>{
-  console.log(req)
+  console.log(req.headers)
   let token =req.headers['authorization']
    console.log("token",token)
     if(!token){
@@ -18,7 +18,7 @@ const verifyToken=(req,res,next)=>{
             return res.json({ message:err });
           }
         req.user = decoded;
-        console.log(decoded)
+        console.log('decoded',decoded)
         next();
       });
     };
