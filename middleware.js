@@ -3,9 +3,11 @@ const jwt= require('jsonwebtoken')
 const secretKey='abcd'
 
 const verifyToken=(req,res,next)=>{
+  console.log(req)
   let token =req.headers['authorization']
-   console.log("error")
+   console.log("token",token)
     if(!token){
+      console.log('error')
         return res.json({message:'No token provided'})
     }
     console.log(token)
