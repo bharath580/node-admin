@@ -49,7 +49,9 @@ router.post("/login", async (req, res) => {
         tokenGenerate.user_name,
         tokenGenerate.user_password,
       ]);
-      const result = await authModel.getById(user[0].id);
+      const result = await authModel.getByAdminId(user[0].id);
+      console.log('result',result)
+    
       res.json(result);
     } else {
       res.status(404).send("No user found");

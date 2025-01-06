@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("../config/database.config");
 const saleModel = require("../model/sale.model");
 const router = express.Router();
+console.log("sale excecute")
 
 router.get("/", async (req, res) => {
   try {

@@ -14,6 +14,10 @@ const executeQuery = (sql, values) => {
     const sql = `SELECT supervisor_id,user_name,role,access_token FROM supervisors WHERE supervisor_id=?`;
     return executeQuery(sql, [id]);
   };
+  const getByAdminId = async (id) => {
+    const sql = `SELECT * FROM admin_user WHERE id=?`;
+    return executeQuery(sql, [id]);
+  };
   
   const getAll = async () => {
     const sql = 'SELECT * FROM admin_user';
@@ -28,4 +32,4 @@ const executeQuery = (sql, values) => {
   };
   
 
-module.exports={executeQuery,create,getById}
+module.exports={executeQuery,create,getById,getByAdminId}

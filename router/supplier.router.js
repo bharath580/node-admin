@@ -36,6 +36,7 @@ router.post(
   ]),
   async (req, res) => {
     try {
+      console.log('supplier post')
       const body=JSON.parse(req.body.data)
       const files=req.files
       console.log("body",body)
