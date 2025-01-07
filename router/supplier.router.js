@@ -35,6 +35,8 @@ router.post(
     { name: "id_proof_image", maxCount: 1 },
   ]),
   async (req, res) => {
+    console.log('supplier post')
+
     try {
       console.log('supplier post')
       const body=JSON.parse(req.body.data)
@@ -51,8 +53,13 @@ router.post(
         id_proof_number: body.data.id_proof_number || '',
         bank_account_number: body.data.bank_account_number || '',
         supplier_signature: body.supplierSignature || '',
-        supplier_image:req.files["supplier_image"][0] ?`images/${req.files["supplier_image"][0].filename}`:'',
-        id_proof_image: req.files["id_proof_image"][0] ?`images/${req.files["id_proof_image"][0].filename}`: '',
+        supplier_image: req.files["supplier_image"]?.[0]?.filename
+  ? `images/${req.files["supplier_image"][0].filename}`
+  : '',
+id_proof_image: req.files["id_proof_image"]?.[0]?.filename
+  ? `images/${req.files["id_proof_image"][0].filename}`
+  : '',
+
       };
       console.log("data", data);
 
