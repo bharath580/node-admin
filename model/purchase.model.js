@@ -14,7 +14,8 @@ const executeQuery = (sql, values) => {
 const getAll = async () => {
   const sql = `SELECT CONCAT(codes.code,purchase_order.po_id) AS display_order_id,
   purchase_order.po_id AS order_id,
-  DATE_FORMAT(purchase_order.date, '%d/%m/%Y') AS date,DATE_FORMAT(purchase_order.date, '%H:%i') AS time,
+  DATE_FORMAT(purchase_order.date, '%e %b %Y') AS date
+,DATE_FORMAT(purchase_order.date, '%H:%i') AS time,
   suppliers.supplier_id AS supplier_id,purchase_order.supplier_signature as supplier_signature,
   suppliers.supplier_name AS supplier,
   SUM(
@@ -24,8 +25,8 @@ const getAll = async () => {
     purchase_order.procurement_mode = 1, 
     IF(
         (purchase_order.supplier_signature IS NOT NULL AND purchase_order.supplier_signature != '') AND 
-        purchase_order.driver_signature IS NOT NULL AND 
-        purchase_order.supervisor_signature IS NOT NULL, 
+        (purchase_order.driver_signature IS NOT NULL AND purchase_order.driver_signature !='') AND
+        (purchase_order.supervisor_signature IS NOT NULL AND purchase_order.supervisor_signature !=''), 
         1, 
         0
     ),
@@ -33,7 +34,7 @@ const getAll = async () => {
         purchase_order.procurement_mode = 2, 
         IF(
             (purchase_order.supplier_signature IS NOT NULL AND purchase_order.supplier_signature != '') AND 
-            purchase_order.supervisor_signature IS NOT NULL, 
+            (purchase_order.supervisor_signature IS NOT NULL AND purchase_order.supervisor_signature !=''), 
             1, 
             0
         ),
@@ -60,7 +61,7 @@ const getById = async (id) => {
   console.log("purchase id excecute")
   try {
     const sql = `SELECT
-      *, DATE_FORMAT(purchase_order.date, '%d/%m/%Y') AS date,CONCAT(codes.code,purchase_order.po_id) AS display_order_id,
+      *, DATE_FORMAT(purchase_order.date, '%e %b %Y') AS date,DATE_FORMAT(purchase_order.date, '%H:%i') AS time,CONCAT(codes.code,purchase_order.po_id) AS display_order_id,
       SUM(purchase_order_details.quantity) AS totalQuantity,purchase_order.supplier_signature 
       AS supplierSignature 
     FROM

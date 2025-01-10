@@ -118,7 +118,7 @@ const generateTokenForMobile = async (user) => {
   };
 
   // Create a token with a payload (user data) and a secret key
-  const token = jwt.sign(userData, secretKey, { expiresIn: "1d" });
+  const token = jwt.sign(userData, secretKey);
 
   userData.token = token;
   console.log("userdata", userData);
@@ -134,7 +134,7 @@ const generateToken = async (user) => {
   };
 
   // Create a token with a payload (user data) and a secret key
-  const token = jwt.sign(userData, secretKey, { expiresIn: "1d" });
+  const token = jwt.sign(userData, secretKey);
 
   userData.token = token;
   console.log("userdata", userData);

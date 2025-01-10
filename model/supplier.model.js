@@ -12,7 +12,11 @@ const executeQuery = (sql, values) => {
 };
 
 const getAll = async () => {
-  const sql = "SELECT * FROM suppliers";
+  const sql = `SELECT suppliers.*,suppliers.supplier_id AS supplier_id, COUNT(DISTINCT purchase_order.po_id) AS order_number,SUM(purchase_order_details.quantity) AS total_quantity FROM suppliers LEFT JOIN
+  purchase_order  ON purchase_order.supplier_id = suppliers.supplier_id
+  LEFT JOIN
+  purchase_order_details ON purchase_order.po_id = purchase_order_details.po_id
+  GROUP BY suppliers.supplier_id ORDER BY suppliers.supplier_id desc`;
   return executeQuery(sql);
 };
 

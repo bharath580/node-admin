@@ -13,7 +13,7 @@ const executeQuery = (sql, values) => {
 };
 
 const getAll = async () => {
-    const sql = "SELECT * FROM buyer";
+    const sql = "SELECT * FROM buyer order by buyer_id desc";
     return executeQuery(sql);
   };
 
