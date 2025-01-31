@@ -33,11 +33,7 @@ GROUP BY batches_details.batch_id`
 router.get("/", async (req, res) => {
   try {
     const query = `SELECT CONCAT(codes.code,bales.bale_id) AS display_bale_id,bales.*, baling_material.name as bale_material_name,
-     CONCAT(
-        MONTHNAME(bales.created_on),
-        ' ',
-        DAY(bales.created_on)
-    ) AS date,DATE_FORMAT(bales.created_on, '%H:%i') AS time
+      DATE_FORMAT(bales.created_on, '%e %b %Y') AS date,DATE_FORMAT(bales.created_on, '%H:%i') AS time
      FROM bales
     JOIN codes ON codes.name='Bale' join baling_material on bales.bale_material = baling_material.id
     ORDER BY
@@ -54,7 +50,7 @@ router.get("/:id", async (req, res) => {
   try {
     
     const result={}
-    const sql = `SELECT bales.bale_id,SUM(bales_details.quantity) AS bale_quantity,CONCAT(codes.code,bales.bale_id) AS display_bale_id,bales.operator_signature AS operator_signature,bales.bale_material,DATE_FORMAT(bales.created_on, '%d/%m/%Y') AS date,DATE_FORMAT(bales.created_on, '%H:%i') AS time,bales.sold,baling_material.name as bale_material_name FROM bales JOIN bales_details ON bales_details.bale_id = bales.bale_id
+    const sql = `SELECT bales.bale_id,SUM(bales_details.quantity) AS bale_quantity,CONCAT(codes.code,bales.bale_id) AS display_bale_id,bales.operator_signature AS operator_signature,bales.bale_material,DATE_FORMAT(bales.created_on, '%e %b %Y') AS date,DATE_FORMAT(bales.created_on, '%H:%i') AS time,bales.sold,baling_material.name as bale_material_name FROM bales JOIN bales_details ON bales_details.bale_id = bales.bale_id
     JOIN codes ON codes.name='Bale' join baling_material on bales.bale_material = baling_material.id
     WHERE bales.bale_id=${id}`;
     const sql1 = `SELECT bales_details.batch_id,bales_details.quantity,CONCAT(codes.code,bales_details.batch_id) AS display_batch_id FROM bales

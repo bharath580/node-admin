@@ -37,7 +37,7 @@ router.get("/batchdetail/:id", async (req, res) => {
     const result={}
     const id = req.params.id;
     const sql=`SELECT batches.batch_id,batches.status as status,CONCAT(codes.code,batches.batch_id) AS display_batch_id,
-    DATE_FORMAT(batches.created_on, '%d/%m/%Y') AS date,
+    DATE_FORMAT(batches.created_on, '%e %b %Y') AS date,
      SUM(purchase_order_details.quantity) AS quantity,
      COUNT(purchase_order_details.po_details_id) AS orderCount,
     DATE_FORMAT(batches.created_on, '%H:%i') AS time
@@ -59,11 +59,40 @@ router.get("/batchdetail/:id", async (req, res) => {
     JOIN purchase_materials ON batches_details.material_id = purchase_materials.purchase_material_id
     JOIN codes ON codes.name='Purchases'
     WHERE batches.batch_id=${id};`
-    
+
+    const sql3 = `SELECT segregation.quantity AS quantity,segregation_material.material as material_name from segregation
+join segregation_material on segregation.segregation_material_id = segregation_material.segregation_material_id
+ where segregation.batch_id=${id} order by segregation_material.material `
+
+    const sql4=`SELECT sum(segregation.quantity) as quantity from segregation join segregation_material on
+segregation_material.segregation_material_id = segregation.segregation_material_id
+and segregation_material.rejects=1 where segregation.batch_id = ${id}`
+    const sql5=`SELECT sum(segregation.quantity) as quantity from segregation where segregation.batch_id = ${id}`
      result.summary = await batchModel.executeQuery(sql)
      result.material=await batchModel.executeQuery(sql2)
+     result.segregation=await batchModel.executeQuery(sql3)
+     result.rejects=await batchModel.executeQuery(sql4)
+     result.seg_quantity=await batchModel.executeQuery(sql5)
+     result.rejects= result.rejects[0].quantity?result.rejects[0].quantity:0
+     console.log(result.summary[0].quantity)
+     console.log(result.rejects)
+     if(result.summary[0].status == 3){
+      result.quality = Math.round((100 - (result.rejects * 100 / result.seg_quantity[0].quantity)));
+      result.seg_loss = (result.summary[0].quantity - result.seg_quantity[0].quantity) * 100 / result.summary[0].quantity
+     }
+     else if(result.summary[0].status == 2){
+      result.quality = 100 - (result.rejects * 100 / result.seg_quantity[0].quantity)
+      result.seg_loss = 0
+     }
+     else{
+      result.quality = 0
+      result.seg_loss = 0
+     }
+     
+     
+     console.log(result.quality)
 
-    res.json(result);
+     res.json(result);
   } catch (e) {
     console.error("Error:", e);
     res.status(500).send("Error");

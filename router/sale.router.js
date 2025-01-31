@@ -6,7 +6,7 @@ console.log("sale excecute")
 
 router.get("/", async (req, res) => {
   try {
-    const query = `SELECT CONCAT(codes.code,sales.sales_id) AS display_sale_id,sales.*,DATE_FORMAT(sales.created_on, '%d/%m/%Y') AS date,DATE_FORMAT(sales.created_on, '%H:%i') AS time,SUM(sales_details.quantity) AS quantity,buyer.buyer_name AS buyer_name FROM sales
+    const query = `SELECT CONCAT(codes.code,sales.sales_id) AS display_sale_id,sales.*,DATE_FORMAT(sales.created_on, '%e %b %Y') AS date,DATE_FORMAT(sales.created_on, '%H:%i') AS time,SUM(sales_details.quantity) AS quantity,buyer.buyer_name AS buyer_name FROM sales
     JOIN sales_details ON sales.sales_id=sales_details.sale_id
     JOIN buyer ON buyer.buyer_id = sales.buyer_name
     JOIN codes ON codes.name='Sales'
@@ -48,8 +48,8 @@ router.get("/:id", async (req, res) => {
   const {id}=req.params
   const result={}
   try {
-    const query = `SELECT DATE_FORMAT(sales.created_on, '%d/%m/%Y') as date,
-    buyer.buyer_name,buyer.buyer_id,
+    const query = `SELECT DATE_FORMAT(sales.created_on, '%e %b %Y') as date,
+    buyer.buyer_name,buyer.buyer_id,sales.buyer_signature,sales.supervisor_signature,
     COUNT(DISTINCT sales_details.bale_id) AS balesCount,
     COUNT(DISTINCT purchase_order.supplier_id) AS suppliersCount,
     sales.sales_id as sale_id  FROM sales

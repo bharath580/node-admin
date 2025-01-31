@@ -69,6 +69,27 @@ router.get("/", async (req, res) => {
       AND segregation.created_on<date_add('${formattedEndDate}', INTERVAL 1 DAY)
       GROUP BY material
       ORDER BY quantity DESC`
+      const purchaseTrend=`SELECT 
+    DATE(purchase_order.date) AS order_date, 
+    SUM(purchase_order_details.quantity) AS total_quantity
+FROM purchase_order 
+JOIN purchase_order_details 
+    ON purchase_order.po_id = purchase_order_details.po_id
+WHERE purchase_order.date BETWEEN '${formattedStartDate}' AND '${formattedEndDate}'
+GROUP BY order_date
+ORDER BY order_date;`
+const segregationTrend = `SELECT 
+    DATE(segregation.created_on) AS segregation_date, 
+    SUM(segregation.quantity) AS total_quantity
+FROM segregation
+WHERE segregation.created_on BETWEEN '${formattedStartDate}' AND '${formattedEndDate}'
+GROUP BY segregation_date
+ORDER BY segregation_date;
+`
+const baleTrend=`SELECT DATE(bales.created_on) as bale_date,sum(bales_details.quantity) as quantity FROM bales
+join bales_details on bales.bale_id=bales_details.bale_id
+where bales.created_on between '${formattedStartDate}' and '${formattedEndDate}'
+group by bale_date order by bale_date;`
        result.procured_volume = await dashboardModel.executeQuery(volume);
        result.segregated = await dashboardModel.executeQuery(segregated);
        result.sold_volume = await dashboardModel.executeQuery(sold);
@@ -76,6 +97,9 @@ router.get("/", async (req, res) => {
        result.quantityByMaterial = await dashboardModel.executeQuery(quantityByMaterial);
        result.topSuppliers = await dashboardModel.executeQuery(topSuppliers);
        result.segregationMaterial = await dashboardModel.executeQuery(segregationMaterial);
+       result.purchaseTrend = await dashboardModel.executeQuery(purchaseTrend);
+       result.segregationTrend = await dashboardModel.executeQuery(segregationTrend);
+       result.baleTrend = await dashboardModel.executeQuery(baleTrend);
        
       res.json(result);
     } catch (e) {
