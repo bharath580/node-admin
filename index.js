@@ -21,7 +21,7 @@ const app = express();
 
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://www.hk.kcdev.xyz','http://13.202.98.144:2000','http://3.109.216.94:3000','http://52.66.64.25:3000','*'],
+  origin: ['http://localhost:3000', 'https://www.hk.kcdev.xyz','http://13.202.98.144:2000','http://43.204.35.173:3000','http://52.66.64.25:3000','*'],
 }));
 
 app.use(bodyParser.json({ limit: '100mb' })); // or higher if needed
